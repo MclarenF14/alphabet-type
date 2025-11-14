@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Alphabet Step Timer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Fira+Mono&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #8EC5FC 0%, #E0C3FC 100%);
+      min-height: 100vh;
+      font-family: 'Montserrat', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .timer-card {
+      background: #fff;
+      border-radius: 1.4em;
+      box-shadow: 0 16px 40px 0 rgba(80, 100, 130, 0.13), 0 1.5px 5px 0 rgba(120, 80, 160, 0.12);
+      padding: 2.5em 2em 2em 2em;
+      min-width: 345px;
+      max-width: 90vw;
+    }
+    h1 {
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-size: 2em;
+      margin-bottom: 0.15em;
+      letter-spacing: 2px;
+      color: #6528de;
+      text-shadow: 0 0.5px 0 #fff;
+    }
+    .title-sub {
+      color: #767676;
+      font-weight: 400;
+      font-size: 0.95em;
+      margin-bottom: 1.3em;
+    }
+    #currentLetter {
+      font-family: 'Fira Mono', monospace;
+      font-size: 2.5em;
+      padding: 0.22em 0.7em;
+      width: 2.1em;
+      background: linear-gradient(90deg, #e592fc 35%, #91d4fd 100%);
+      color: #3c176d;
+      text-shadow: 0 1px 6px #caeffc;
+      border-radius: 0.33em;
+      font-weight: bold;
+      letter-spacing: 0.25em;
+      margin: 0 auto 1em auto;
+      display: block;
+      transition: background 0.2s;
+      box-shadow: 0 2px 12px 0 rgba(100,50,200,0.09);
+    }
+    #yourProgress {
+      font-family: 'Fira Mono', monospace;
+      font-size: 1.2em;
+      color: #7e30c2;
+      margin-bottom: 1.2em;
+      min-height: 1.35em;
+      letter-spacing: 0.05em;
+    }
+    #inputHolder {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1.3em;
+    }
+    #letterInput {
+      font-family: 'Fira Mono', monospace;
+      font-size: 2em;
+      padding: 0.38em 0.75em;
+      width: 1.7em;
+      border: 2px solid #DEB0FF;
+      border-radius: 0.6em;
+      background: #f6efff;
+      outline: none;
+      text-align: center;
+      transition: box-shadow 0.18s, border 0.18s, background 0.18s;
+      color: #352061;
+      margin-left: 1em;
+      box-shadow: 0 2px 12px 0 rgba(100,50,200,0.09);
+    }
+    #letterInput:focus {
+      border-color: #7C3AED;
+      background: #ede7fe;
+      box-shadow: 0 4px 18px 0 rgba(124,58,237,0.13);
+    }
+    #timer {
+      margin: 0.5em 0 0.85em 0;
+      font-size: 2.5em;
+      font-weight: bold;
+      color: #7e3ff2;
+      letter-spacing: 1.5px;
+      text-shadow: 0 1px 5px rgba(124,58,237,0.07);
+      font-family: 'Fira Mono', monospace;
+      min-height: 1em;
+      transition: color 0.18s;
+    }
+    #best {
+      background: #F3F0FF;
+      color: #24086B;
+      padding: 0.5em 1.2em;
+      border-radius: 0.5em;
+      font-size: 1.18em;
+      margin-bottom: 1em;
+      display: inline-block;
+      box-shadow: 0 2px 10px 0 rgba(124,58,237,0.08);
+    }
+    #timesList {
+      margin-top: 0.8em;
+      text-align: left;
+      font-size: 1.05em;
+      font-family: 'Fira Mono', monospace;
+      color: #8855cc;
+      background: #f8f3fd;
+      border-radius: 0.45em;
+      padding: 0.7em 1.2em;
+      max-height: 9em;
+      overflow-y: auto;
+      box-shadow: 0 1.5px 4px 0 rgba(124,58,237,0.07);
+    }
+    #timesList b {
+      color: #6528de;
+      font-weight: 700;
+      font-size: 1.1em;
+      margin-bottom: 3px;
+      display: inline-block;
+    }
+    #resetBtn, #playAgainBtn {
+      background: linear-gradient(90deg,#b57eff 10%, #8EA6FF 100%);
+      border: none;
+      border-radius: 0.6em;
+      color: #fff;
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-size: 1em;
+      padding: 0.64em 1.3em;
+      cursor: pointer;
+      box-shadow: 0 1.8px 12px 0 rgba(124,58,237,0.13);
+      transition: background 0.18s, transform 0.11s;
+      margin: 0.35em 0.4em 0.7em 0;
+      min-width: 100px;
+      display: inline-block;
+    }
+    #resetBtn:hover, #playAgainBtn:hover {
+      background: linear-gradient(90deg,#7c3aed 10%, #8EA6FF 95%);
+      transform: translateY(-2px) scale(1.035);
+    }
+    .glow {
+      color: #BE14DC !important;
+      text-shadow: 0 0 8px #efd9f5, 0 0 8px #BE14DC;
+      transition: text-shadow 0.3s, color 0.26s;
+    }
+    .buttonRow {
+      display: flex;
+      justify-content: center;
+      gap: 0.7em;
+      margin-bottom: 0.6em;
+    }
+    @media (max-width:430px) {
+      .timer-card {
+        min-width: unset;
+        padding: 1.2em 0.3em;
+      }
+      #currentLetter {
+        font-size: 2em;
+        padding: 0.13em 0.47em;
+      }
+      #letterInput {
+        font-size: 1.35em;
+      }
+      .buttonRow {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.45em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="timer-card">
+    <h1>🔠 Alphabet Step Timer</h1>
+    <div class="title-sub">Type one letter at a time. Correct letter required to move ahead!</div>
+    <div id="currentLetter">A</div>
+    <div id="yourProgress"></div>
+    <div id="inputHolder">
+      <label style="font-family:'Montserrat'; font-weight:600; font-size:1.06em; color:#6528de;">Type:</label>
+      <input id="letterInput" type="text" maxlength="1" autocomplete="off" spellcheck="false" />
+    </div>
+    <div id="timer">0.00s</div>
+    <div id="best">Best Score: --</div>
+    <div class="buttonRow">
+      <button id="playAgainBtn" title="Play again with your scores kept">Play Again</button>
+      <button id="resetBtn" title="Clear past times and best score">Clear all scores</button>
+    </div>
+    <div id="timesList"></div>
+  </div>
+  <script>
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+    let currentIndex = 0;
+    let progress = '';
+    let startTime = null;
+    let running = false;
+    let allTimes = [];
+
+    const letterInput = document.getElementById('letterInput');
+    const currentLetterDiv = document.getElementById('currentLetter');
+    const bestDiv = document.getElementById('best');
+    const timerDiv = document.getElementById('timer');
+    const timesListDiv = document.getElementById('timesList');
+    const yourProgressDiv = document.getElementById('yourProgress');
+    const resetBtn = document.getElementById('resetBtn');
+    const playAgainBtn = document.getElementById('playAgainBtn');
+
+    // Initial state
+    function resetState(focus=true) {
+      currentIndex = 0;
+      progress = '';
+      running = false;
+      startTime = null;
+      letterInput.value = '';
+      letterInput.disabled = false;
+      updateLetter();
+      timerDiv.classList.remove('glow');
+      timerDiv.textContent = "0.00s";
+      yourProgressDiv.innerHTML = "&nbsp;";
+      if (focus) letterInput.focus();
+    }
+
+    function updateLetter() {
+      currentLetterDiv.textContent = alphabet[currentIndex].toUpperCase();
+      yourProgressDiv.innerHTML = progress.split('').map(l => `<b>${l}</b>`).join(' ');
+    }
+
+    // Load best and all times from localStorage
+    function loadTimes() {
+      try {
+        allTimes = JSON.parse(localStorage.getItem('alphabetTimes-step')) || [];
+      } catch { allTimes = []; }
+      updateScores();
+    }
+    
+    function updateScores() {
+      if (allTimes.length > 0) {
+        const bestTime = Math.min(...allTimes);
+        bestDiv.textContent = 'Best Score: ' + bestTime.toFixed(2) + 's';
+        let html = '<b>All Times</b><br>';
+        html += allTimes.map((t,i) =>
+          `<span${t === bestTime ? ' style="color:#ff309b;"' : ''}>#${i + 1}: ${t.toFixed(2)}s</span>`
+        ).join('<br>');
+        timesListDiv.innerHTML = html;
+      } else {
+        bestDiv.textContent = 'Best Score: --';
+        timesListDiv.textContent = '';
+      }
+    }
+
+    // Main input logic
+    letterInput.addEventListener('input', e => {
+      let val = letterInput.value.toLowerCase();
+      if (val.length === 0) return;
+
+      // Prevent paste
+      if (e.inputType === 'insertFromPaste') {
+        letterInput.value = '';
+        return;
+      }
+
+      if (!running && val === alphabet[currentIndex]) {
+        // Start the timer on the first correct letter!
+        running = true;
+        startTime = performance.now();
+        requestAnimationFrame(updateTimer);
+      }
+
+      if (val === alphabet[currentIndex]) {
+        progress += val;
+        currentIndex++;
+        if(currentIndex === alphabet.length){
+          // Completed!
+          if (running) {
+            running = false;
+            const elapsed = (performance.now() - startTime) / 1000;
+            allTimes.push(elapsed);
+            localStorage.setItem('alphabetTimes-step', JSON.stringify(allTimes));
+            updateScores();
+            timerDiv.textContent = elapsed.toFixed(2) + 's';
+            timerDiv.classList.add('glow');
+            yourProgressDiv.innerHTML = progress.split('').map(l => `<b>${l}</b>`).join(' ');
+            letterInput.disabled = true;
+          }
+        } else {
+          letterInput.value = '';
+          updateLetter();
+        }
+      } else {
+        // Wrong input: stay on same letter, ignore
+        letterInput.value = '';
+      }
+    });
+
+    // Keep timer up to date
+    function updateTimer() {
+      if (running) {
+        timerDiv.textContent = ((performance.now() - startTime) / 1000).toFixed(2) + 's';
+        requestAnimationFrame(updateTimer);
+      }
+    }
+
+    // Reset all scores
+    resetBtn.addEventListener('click', () => {
+      // Make the "Clear all scores" button functional (no more confirmation):
+      allTimes = [];
+      localStorage.removeItem('alphabetTimes-step');
+      updateScores();
+      resetState();
+    });
+
+    // Play again button - reset only game, keep scores
+    playAgainBtn.addEventListener('click', () => {
+      resetState();
+    });
+
+    // Block paste
+    letterInput.addEventListener('paste', e => e.preventDefault());
+
+    // Autofocus and reset after finishing
+    letterInput.addEventListener('focus', () => {
+      if (letterInput.disabled) resetState(true);
+    });
+
+    // Enter key restarts if done
+    letterInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && letterInput.disabled) {
+        resetState(true);
+      }
+    });
+
+    // Init
+    loadTimes();
+    resetState();
+  </script>
+</body>
+</html>
